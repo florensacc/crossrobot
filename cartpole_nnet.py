@@ -1,3 +1,45 @@
+
+import cartpole
+import numpy as np
+import theano
+import theano.tensor as T
+theano.config.exception_verbosity='high'
+import scipy as sp
+#import matplotlib.pyplot as plt
+#import matplotlib.mlab as mlab
+import cPickle as pickle
+import gzip
+import os
+import sys
+import timeit
+
+#########################
+# MODULE-WIDE VARIABLES #
+#########################
+
+'''
+Generate LQR trajectory for solving our simple cartpole problem
+'''
+x_ref = np.array([0, np.pi, 0, 0])
+u_ref = 0.
+A, B, c = cartpole.linearize_cartpole(x_ref, u_ref, 0.1, 0.1)
+Q = np.eye(4)
+R = np.eye(1)
+dt = 0.1
+x_init = np.array([0, np.pi - np.pi/10, 0, 0])
+
+K_inf, P_inf, Quu = cartpole.lqr_infinite_horizon(A, B, Q, R)
+
+x_lqr = np.zeros([4,500])
+u_lqr = np.zeros([1,500])
+
+x_lqr[:,0] = np.array([0, np.pi - np.pi/10, 0, 0])
+u_lqr[:,0] = np.dot(K_inf, (x_lqr[:,0] - x_ref)) + u_ref
+
+for i in range(499):
+    x_lqr[:,i+1] = cartpole.sim_cartpole(x_lqr[:,i], u_lqr[:,i], dt)
+    u_lqr[:,i+1] = np.dot(K_inf, (x_lqr[:,i] - x_ref) ) + u_ref
+
 ##########################
 # NEURAL NETWORK CLASSES #
 ##########################
