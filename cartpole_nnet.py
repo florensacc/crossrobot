@@ -1,8 +1,5 @@
-<<<<<<< HEAD
-=======
 
 import cartpole
->>>>>>> 086f1e38244039ab2e55e348b6fd3a58bcfc7ecf
 import numpy as np
 import theano
 import theano.tensor as T
@@ -16,8 +13,6 @@ import os
 import sys
 import timeit
 
-<<<<<<< HEAD
-=======
 #########################
 # MODULE-WIDE VARIABLES #
 #########################
@@ -45,7 +40,6 @@ for i in range(499):
     x_lqr[:,i+1] = cartpole.sim_cartpole(x_lqr[:,i], u_lqr[:,i], dt)
     u_lqr[:,i+1] = np.dot(K_inf, (x_lqr[:,i] - x_ref) ) + u_ref
 
->>>>>>> 086f1e38244039ab2e55e348b6fd3a58bcfc7ecf
 ##########################
 # NEURAL NETWORK CLASSES #
 ##########################
@@ -237,19 +231,19 @@ def train_NN(learning_rate=0.01, L1_reg=0.0, L2_reg=0.0, n_epochs=100, batch_siz
                                 'for extended version, provide a LQR controller and a variance for each x_init'
                             )
                             
-                        x_traj1, u_traj1 = gen_traj_guidance_ext(LQR_start[j], LQR_controller[j], LQR_var[j],
+                        x_traj1, u_traj1 = cartpole.gen_traj_guidance_ext(LQR_start[j], LQR_controller[j], LQR_var[j],
                                                                 traj_size=traj_size, dt=dt)
                         x_traj_list.append(x_traj1)
                         u_traj_list.append(u_traj1)
                     else:    
-                        x_traj1, u_traj1 = gen_traj_guidance(LQR_start[j], x_ref, u_ref, 
+                        x_traj1, u_traj1 = cartpole.gen_traj_guidance(LQR_start[j], x_ref, u_ref, 
                                                              LQR_controller, LQR_var, traj_size, dt)
                         x_traj_list.append(x_traj1)
                         u_traj_list.append(u_traj1)
     else:
         n_guidance = 1
         for t in range(3*num_traj):
-            x_traj1, u_traj1 = gen_traj_guidance(LQR_start, x_ref, u_ref, LQR_controller, LQR_var, traj_size, dt)
+            x_traj1, u_traj1 = cartpole.gen_traj_guidance(LQR_start, x_ref, u_ref, LQR_controller, LQR_var, traj_size, dt)
             x_traj_list.append(x_traj1)
             u_traj_list.append(u_traj1)
         
@@ -497,7 +491,7 @@ def optimize_NN_hyperparameters(LQR_controller, LQR_start, LQR_var,
         val_loss[:,i] = validation_losses
     return tr_loss, val_loss
 
-if name == '__main__':
+if __name__ == '__main__':
     x, policy, tr_losses, val_losses, te_losses, train_set, val_set, train_u, val_u = train_NN(
     learning_rate=0.0005, L1_reg=0.0, L2_reg=0.0, n_epochs=10000, batch_size=50, n_layers=1, n_hidden=20, 
     LQR_controller=K_inf, LQR_start=x_init, LQR_var=Quu, num_traj=20, ext=False, learning_rule=None,
