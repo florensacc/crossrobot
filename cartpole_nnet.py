@@ -490,3 +490,9 @@ def optimize_NN_hyperparameters(LQR_controller, LQR_start, LQR_var,
         tr_loss[:,i] = training_losses
         val_loss[:,i] = validation_losses
     return tr_loss, val_loss
+
+if name == '__main__':
+    x, policy, tr_losses, val_losses, te_losses, train_set, val_set, train_u, val_u = train_NN(
+    learning_rate=0.0005, L1_reg=0.0, L2_reg=0.0, n_epochs=10000, batch_size=50, n_layers=1, n_hidden=20, 
+    LQR_controller=K_inf, LQR_start=x_init, LQR_var=Quu, num_traj=20, ext=False, learning_rule=None,
+    dt=0.1, print_interval=100, traj_size=500)
