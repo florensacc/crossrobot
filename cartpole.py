@@ -7,8 +7,8 @@ import numpy as np
 #import theano.tensor as T
 #theano.config.exception_verbosity='high'
 import scipy as sp
-import matplotlib.pyplot as plt
-import matplotlib.mlab as mlab
+#import matplotlib.pyplot as plt
+#import matplotlib.mlab as mlab
 import cPickle as pickle
 import gzip
 import os
